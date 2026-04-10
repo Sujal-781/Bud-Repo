@@ -49,6 +49,13 @@
 			<artifactId>spring-boot-starter-webmvc-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.eclipse.jgit</groupId>
+			<artifactId>org.eclipse.jgit</artifactId>
+			<version>7.3.0.202506031305-r</version>
+			<scope>compile</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
