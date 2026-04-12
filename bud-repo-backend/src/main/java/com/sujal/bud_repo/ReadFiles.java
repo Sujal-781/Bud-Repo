@@ -1,5 +1,6 @@
 package com.sujal.bud_repo;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,7 +17,8 @@ class ReadFiles{
                     .filter(path -> !isIgnore(path))
                     .forEach(System.out::println);
         }
-        catch(Exception e){
+        catch (IOException e) {
+            System.err.println("IO Error while walking directory: " + repoPath);
             e.printStackTrace();
         }
     }
