@@ -1,18 +1,18 @@
 package com.sujal.bud_repo;
-
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.file.*;
+import java.util.*;
 import java.util.stream.Stream;
 
-public class ChunckFiles {
+public class ChunkFiles {
+
     public static void main(String[] args) {
         Path repoPath = Paths.get("/Users/sujalchoudhary/Desktop/Expensio");
+
         List<String> allChunks = new ArrayList<>();
-        try(Stream<Path> paths = Files.walk(repoPath)){
+
+        try (Stream<Path> paths = Files.walk(repoPath)) {
+
             paths
                     .filter(Files::isRegularFile)
                     .filter(path -> path.toString().endsWith(".java"))
@@ -26,8 +26,7 @@ public class ChunckFiles {
                         }
                     });
 
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -39,8 +38,24 @@ public class ChunckFiles {
         });
     }
 
+    // 🔹 Chunking logic
     private static List<String> chunkFile(Path path) throws IOException {
-        return new ArrayList<>();
+        List<String> lines = Files.readAllLines(path);
+        List<String> chunks = new ArrayList<>();
+
+        int chunkSize = 200;
+
+        for (int i = 0; i < lines.size(); i += chunkSize) {
+            int end = Math.min(i + chunkSize, lines.size());
+
+            List<String> subList = lines.subList(i, end);
+
+            String chunk = String.join("\n", subList);
+
+            chunks.add(chunk);
+        }
+
+        return chunks;
     }
 
     // 🔹 Ignore junk folders/files
