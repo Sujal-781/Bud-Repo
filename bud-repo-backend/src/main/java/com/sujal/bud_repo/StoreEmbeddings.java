@@ -16,7 +16,7 @@ public class StoreEmbeddings {
             List<Double> vector = EmbeddingExample.getEmbedding(content);
             store.add(new CodeChunk(content, vector, filename));
         }
-        System.out.println("Totak chunks stored: " + store.size());
+        System.out.println("Total chunks stored: " + store.size());
         System.out.println("First chunk file: " + store.get(0).filename);
         System.out.println("Vector length: " + store.get(0).embedding.size());
     }
