@@ -6,10 +6,10 @@ import java.util.stream.Stream;
 
 public class ChunkFiles {
 
-    public static void main(String[] args) {
-        Path repoPath = Paths.get("/Users/sujalchoudhary/Desktop/Expensio");
+    public static List<String[]> getChunks(String p) {
+        Path repoPath = Paths.get(p);
 
-        List<String> allChunks = new ArrayList<>();
+        List<String[]> allChunks = new ArrayList<>();
 
         try (Stream<Path> paths = Files.walk(repoPath)) {
 
@@ -19,7 +19,7 @@ public class ChunkFiles {
                     .filter(path -> !isIgnored(path))
                     .forEach(path -> {
                         try {
-                            List<String> chunks = chunkFile(path);
+                            List<String[]> chunks = chunkFile(path);
                             allChunks.addAll(chunks);
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -30,35 +30,31 @@ public class ChunkFiles {
             e.printStackTrace();
         }
 
-        // Print some output
         System.out.println("Total chunks: " + allChunks.size());
-        allChunks.stream().limit(5).forEach(chunk -> {
+        allChunks.stream().limit(3).forEach(chunk -> {
             System.out.println("----- CHUNK -----");
-            System.out.println(chunk);
+            System.out.println("File: " + chunk[0]);
+            System.out.println(chunk[1]);
         });
+
+        return allChunks;
     }
 
-    // 🔹 Chunking logic
-    private static List<String> chunkFile(Path path) throws IOException {
+    private static List<String[]> chunkFile(Path path) throws IOException {
         List<String> lines = Files.readAllLines(path);
-        List<String> chunks = new ArrayList<>();
+        List<String[]> chunks = new ArrayList<>();
 
         int chunkSize = 200;
 
         for (int i = 0; i < lines.size(); i += chunkSize) {
             int end = Math.min(i + chunkSize, lines.size());
-
-            List<String> subList = lines.subList(i, end);
-
-            String chunk = String.join("\n", subList);
-
-            chunks.add(chunk);
+            String content = String.join("\n", lines.subList(i, end));
+            chunks.add(new String[]{path.toString(), content});
         }
 
         return chunks;
     }
 
-    // 🔹 Ignore junk folders/files
     private static boolean isIgnored(Path path) {
         String p = path.toString();
 
