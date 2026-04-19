@@ -19,12 +19,19 @@ public class EmbeddingExample {
     public static List<Double> getEmbedding(String text) throws Exception {
         String apiKey = System.getenv("OPENAI_API_KEY");
 
+        String escapedText = text
+                .replace("\\", "\\\\")
+                .replace("\"", "\\\"")
+                .replace("\n", "\\n")
+                .replace("\r", "")
+                .replace("\t", "\\t");
+
         String json = String.format("""
         {
           "input": "%s",
           "model": "text-embedding-3-small"
         }
-        """, text);
+        """, escapedText);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://api.openai.com/v1/embeddings"))
@@ -35,6 +42,8 @@ public class EmbeddingExample {
 
         HttpResponse<String> response =
                 client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        System.out.println("API response: " + response.body()); // add this line
 
         JsonObject body = gson.fromJson(response.body(), JsonObject.class);
         JsonArray values = body
