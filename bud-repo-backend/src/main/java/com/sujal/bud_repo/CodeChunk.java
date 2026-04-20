@@ -12,4 +12,16 @@ public class CodeChunk {
         this.embedding = embedding;
         this.filename = filename;
     }
+
+    public String getContent() {
+        return content;
+    }
+
+    public List<Double> getEmbedding() {
+        return embedding;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
 }
