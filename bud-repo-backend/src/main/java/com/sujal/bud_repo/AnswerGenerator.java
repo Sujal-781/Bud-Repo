@@ -1,5 +1,8 @@
 package com.sujal.bud_repo;
 
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -7,7 +10,7 @@ import java.net.http.HttpResponse;
 import java.util.List;
 
 public class AnswerGenerator {
-    public static String answerGenerator(String question, List<CodeChunk> relevantChunks) throws Exception{
+    public static String answerGenerator(String question, List<CodeChunk> relevantChunks) throws Exception {
         String apiKey = System.getenv("OPENAI_API_KEY");
 
         StringBuilder context = new StringBuilder();
@@ -46,8 +49,17 @@ public class AnswerGenerator {
         HttpResponse<String> response = HttpClient.newHttpClient()
                 .send(request, HttpResponse.BodyHandlers.ofString());
 
-        // Parse the response — extract "content" field
-        // For now just print raw, add proper JSON parsing next
-        return response.body();
+        String body = response.body();
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode root = mapper.readTree(body);
+        String answer = root
+                .path("choices")
+                .get(0)
+                .path("message")
+                .path("content")
+                .asText();
+
+        return answer;
     }
 }

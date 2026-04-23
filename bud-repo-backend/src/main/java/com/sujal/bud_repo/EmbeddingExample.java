@@ -43,7 +43,6 @@ public class EmbeddingExample {
         HttpResponse<String> response =
                 client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        System.out.println("API response: " + response.body()); // add this line
 
         JsonObject body = gson.fromJson(response.body(), JsonObject.class);
         JsonArray values = body
