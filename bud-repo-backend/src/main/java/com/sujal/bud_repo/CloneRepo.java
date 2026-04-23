@@ -6,10 +6,7 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import java.io.File;
 
 public class CloneRepo {
-    public static void main(String[] args) {
-
-        String repoUrl = "https://github.com/Sujal-781/Expensio";
-        String location = "/Users/sujalchoudhary/Desktop/Expensio";
+    public static void clone(String repoUrl, String location) {
         File dir = new File(location);
 
         if (dir.exists()) {
