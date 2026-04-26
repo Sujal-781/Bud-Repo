@@ -2,11 +2,13 @@ package com.sujal.bud_repo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+@ComponentScan(basePackages = "com.sujal.bud_repo")
 @SpringBootApplication
 public class BudRepoApplication {
 

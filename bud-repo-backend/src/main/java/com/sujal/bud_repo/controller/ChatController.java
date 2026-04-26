@@ -1,10 +1,8 @@
 package com.sujal.bud_repo.controller;
 
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@ComponentScan(basePackages = "com.sujal.bud_repo")
 public class ChatController {
 
     @PostMapping("/ingest")
