@@ -1,19 +1,22 @@
 package com.sujal.bud_repo.controller;
 
+import com.sujal.bud_repo.service.RepoService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ChatController {
 
-    @PostMapping("/ingest")
-    public String ingest(@RequestParam String repoUrl) {
+    @Autowired
+    private RepoService repoService;
 
-        return "Ingestion started for: " + repoUrl;
+    @PostMapping("/ingest")
+    public String ingest(@RequestParam String repoUrl) throws Exception {
+        return repoService.ingest(repoUrl);
     }
 
     @PostMapping("/chat")
     public String chat(@RequestBody String question) {
-
         return "Question received: " + question;
     }
 }
