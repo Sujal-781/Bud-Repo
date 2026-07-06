@@ -16,7 +16,7 @@ public class ChatController {
     }
 
     @PostMapping("/chat")
-    public String chat(@RequestBody String question) {
-        return "Question received: " + question;
+    public String chat(@RequestBody String question) throws Exception {
+        return repoService.chat(question);
     }
 }

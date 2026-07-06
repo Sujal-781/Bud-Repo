@@ -1,7 +1,8 @@
 package com.sujal.bud_repo;
 
-import tools.jackson.databind.JsonNode;
-import tools.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -10,6 +11,9 @@ import java.net.http.HttpResponse;
 import java.util.List;
 
 public class AnswerGenerator {
+
+    static final Gson gson = new Gson();
+
     public static String answerGenerator(String question, List<CodeChunk> relevantChunks) throws Exception {
         String apiKey = System.getenv("OPENAI_API_KEY");
 
@@ -19,25 +23,27 @@ public class AnswerGenerator {
             context.append(chunk.getContent()).append("\n\n");
         }
 
-        String prompt = String.format("""
-            You are an expert at explaining codebases to new developers.
-            
-            Here are relevant code snippets from the repository:
-            %s
-            
-            Based on these snippets, answer this question clearly:
-            %s
-            
-            Be specific about file names and methods. If unsure, say so.
-            """, context, question);
+        String prompt = "You are an expert at explaining codebases to new developers.\n\n"
+                + "Here are relevant code snippets from the repository:\n"
+                + context
+                + "\nBased on these snippets, answer this question clearly:\n"
+                + question
+                + "\n\nBe specific about file names and methods. If unsure, say so.";
 
-        String json = String.format("""
-            {
-              "model": "gpt-4o-mini",
-              "messages": [{"role": "user", "content": %s}],
-              "max_tokens": 500
-            }
-            """, "\"" + prompt.replace("\"", "\\\"").replace("\n", "\\n") + "\"");
+        // Build JSON safely using Gson — no manual escaping
+        JsonObject message = new JsonObject();
+        message.addProperty("role", "user");
+        message.addProperty("content", prompt);
+
+        JsonArray messages = new JsonArray();
+        messages.add(message);
+
+        JsonObject requestBody = new JsonObject();
+        requestBody.addProperty("model", "gpt-4o-mini");
+        requestBody.add("messages", messages);
+        requestBody.addProperty("max_tokens", 500);
+
+        String json = gson.toJson(requestBody);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://api.openai.com/v1/chat/completions"))
@@ -49,17 +55,11 @@ public class AnswerGenerator {
         HttpResponse<String> response = HttpClient.newHttpClient()
                 .send(request, HttpResponse.BodyHandlers.ofString());
 
-        String body = response.body();
-
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode root = mapper.readTree(body);
-        String answer = root
-                .path("choices")
-                .get(0)
-                .path("message")
-                .path("content")
-                .asText();
-
-        return answer;
+        JsonObject body = gson.fromJson(response.body(), JsonObject.class);
+        return body
+                .getAsJsonArray("choices")
+                .get(0).getAsJsonObject()
+                .getAsJsonObject("message")
+                .get("content").getAsString();
     }
 }
