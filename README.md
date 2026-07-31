@@ -18,7 +18,7 @@ Joining a new codebase takes weeks. There's no interactive guide to how a repo a
 
 <!-- PHOTO: Add a GIF or screen recording of the full flow here -->
 <!-- Suggested: screen record ingesting a repo + asking 2-3 questions -->
-<video controls src="assets/v1.mov" title="Title"></video>
+![<video controls src="assets/v1.mov" title="Title"></video>](assets/g1.gif)
 
 ### Example questions you can ask:
 - *"Where is authentication handled?"*
