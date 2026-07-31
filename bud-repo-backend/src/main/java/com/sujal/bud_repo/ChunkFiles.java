@@ -30,13 +30,6 @@ public class ChunkFiles {
             e.printStackTrace();
         }
 
-        System.out.println("Total chunks: " + allChunks.size());
-        allChunks.stream().limit(3).forEach(chunk -> {
-            System.out.println("----- CHUNK -----");
-            System.out.println("File: " + chunk[0]);
-            System.out.println(chunk[1]);
-        });
-
         return allChunks;
     }
 
